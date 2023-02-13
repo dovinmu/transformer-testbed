@@ -1,16 +1,14 @@
 import Head from 'next/head'
-import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import React, {useState, useEffect } from 'react';
-import Image from 'next/image'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   const [conversation, setConversation] = useState<Array<string>>([]);
   const [chatboxDisabled, setChatboxDisabled] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
   const [query, setQuery] = useState<string>('');
+  const [currentModel, setCurrentModel] = useState<string>('curie')
+  const [currentMood, setCurrentMood] = useState<string>('chat')
 
   useEffect(() => {
     if(response) {
@@ -42,7 +40,7 @@ export default function Home() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({conversation})
+      body: JSON.stringify({ conversation, currentModel, currentMood })
     })
     return (await response.json())
   }
@@ -55,6 +53,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+        <div className={styles.sidebar}>
+          <ModelSelector currentModel={currentModel} setCurrentModel={setCurrentModel}/>
+          <MoodSelector currentMood={currentMood} setCurrentMood={setCurrentMood}/>
+        </div>
       <main className={styles.main}>
         <div className={styles.description}>
           {conversation.map((item,i) => 
@@ -70,11 +72,49 @@ export default function Home() {
             </div>
           )}
         </div>
-        <div className={styles.chatbox}>
-          <ChatBox addToList={appendToConversation} disabled={chatboxDisabled} setDisabled={setChatboxDisabled} />
-        </div>
       </main>
+      <div className={styles.chatbox}>
+        <ChatBox addToList={appendToConversation} disabled={chatboxDisabled} setDisabled={setChatboxDisabled} />
+      </div>
     </>
+  )
+}
+
+const ModelSelector = ({currentModel, setCurrentModel}: {currentModel:string, setCurrentModel:any}) => {
+  // allows user to select between four named models
+
+  const handleModelClicked = (model: string) => {
+    console.log(model);
+    setCurrentModel(model);
+  }
+  return (
+    <div className={styles.selectorcontainer}>
+      <h3>Select model</h3>
+      <p className={`${styles.selector} ${styles.disabled}`}>BioGPT</p>
+      <p onClick={() => handleModelClicked("ada")} className={`${styles.selector} ${currentModel==="ada" ? styles.selected : ''}`}>GPT-3 Ada</p>
+      <p onClick={() => handleModelClicked("curie")} className={`${styles.selector} ${currentModel==="curie" ? styles.selected : ''}`}>GPT-3 Curie</p>
+      <p onClick={() => handleModelClicked("davinci")} className={`${styles.selector} ${currentModel==="davinci" ? styles.selected : ''}`}>GPT-3 Davinci</p>
+    </div>
+  )
+}
+
+const MoodSelector = ({ currentMood, setCurrentMood}: {currentMood:string, setCurrentMood:any}) => {
+  // allows user to select between four named models
+
+  const handleModelClicked = (model: string) => {
+    console.log(model);
+    setCurrentMood(model);
+  }
+  return (
+    <div className={styles.selectorcontainer}>
+      <h3>Select prompt</h3>
+      <p onClick={() => handleModelClicked("chat")} className={`${styles.selector} ${currentMood==="chat" ? styles.selected : ''}`}>chat</p>
+      <p onClick={() => handleModelClicked("none")} className={`${styles.selector} ${currentMood==="none" ? styles.selected : ''}`}>none</p>
+      <p onClick={() => handleModelClicked("bing-normal")} className={`${styles.selector} ${currentMood==="bing-normal" ? styles.selected : ''}`}>Bing</p>
+      <p onClick={() => handleModelClicked("bing-stoned")} className={`${styles.selector} ${currentMood==="bing-stoned" ? styles.selected : ''}`}>Bing (stoned)</p>
+      <p onClick={() => handleModelClicked("bing-cyberpunk")} className={`${styles.selector} ${currentMood==="bing-cyberpunk" ? styles.selected : ''}`}>Bing (cyberpunk)</p>
+      <p onClick={() => handleModelClicked("very-safe")} className={`${styles.selector} ${currentMood==="very-safe" ? styles.selected : ''}`}>Very safe</p>
+    </div>
   )
 }
 
@@ -103,7 +143,7 @@ const ChatBox = ({ addToList, disabled, setDisabled }: {addToList: any, disabled
     <form onSubmit={handleSubmit} className={styles.description}>
       <fieldset>
         <textarea value={message} onChange={handleChange} onKeyDown={handleKeyDown}/>
-        <button type="submit" disabled={disabled}>Send</button>
+        {/* <button type="submit" disabled={disabled}>Send</button> */}
       </fieldset>
     </form>
   );

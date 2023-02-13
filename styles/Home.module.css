@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 6rem;
-  min-height: 100vh;
+  min-height: 90vh;
 }
 
 .description {
@@ -23,10 +23,27 @@
 
   border-radius: var(--border-radius);
 }
+/* 
+how a bit of CSS lessons while I'm puzzling out how to lay out all this stuff?
+display
+*/
+.sidebar {
+  border-right: rgb(61, 61, 61) 3px dotted;
+  flex-direction: column;
+  font-family: var(--font-mono);
+  
+  height: 100%;
+  margin: 25px 15px;
+  position: fixed;
+  width: 15%;
+}
+
 
 /* what you type into */
 .chatbox {
-  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
   font-size: 0.85rem;
   max-width: var(--max-width);
   width: 100%;
@@ -129,53 +146,6 @@
   transform: translateZ(0);
 }
 
-.logo,
-.thirteen {
-  position: relative;
-}
-
-.thirteen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 75px;
-  height: 75px;
-  padding: 25px 10px;
-  margin-left: 16px;
-  transform: translateZ(0);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: 0px 2px 8px -1px #0000001a;
-}
-
-.thirteen::before,
-.thirteen::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-}
-
-/* Conic Gradient Animation */
-.thirteen::before {
-  animation: 6s rotate linear infinite;
-  width: 200%;
-  height: 200%;
-  background: var(--tile-border);
-}
-
-/* Inner Square */
-.thirteen::after {
-  inset: 0;
-  padding: 1px;
-  border-radius: var(--border-radius);
-  background: linear-gradient(
-    to bottom right,
-    rgba(var(--tile-start-rgb), 1),
-    rgba(var(--tile-end-rgb), 1)
-  );
-  background-clip: content-box;
-}
-
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
@@ -189,13 +159,28 @@
 }
 
 @media (prefers-reduced-motion) {
-  .thirteen::before {
-    animation: none;
-  }
+
 
   .card:hover span {
     transform: none;
   }
+}
+
+.selectorcontainer {
+  margin: 10px;
+}
+
+.selector {
+  display: block;
+}
+
+.selected {
+  font-weight: bold;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+}
+
+.disabled {
+  font-style: italic;
 }
 
 /* Mobile */
@@ -285,11 +270,6 @@
 @media (prefers-color-scheme: dark) {
   .vercelLogo {
     filter: invert(1);
-  }
-
-  .logo,
-  .thirteen img {
-    filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
   }
 }
 

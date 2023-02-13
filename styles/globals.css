@@ -113,6 +113,7 @@ textarea {
 
 fieldset {
   width: 100%;
+  border: 0px;
 }
 
 @media (prefers-color-scheme: dark) {
