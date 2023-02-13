@@ -1,7 +1,6 @@
-import { clear } from 'console';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import * as prompts from 'prompts';
-import query from '../proxies/openai';
+import query from '../../proxies/openai';
 
 type Data = {
     response: string
