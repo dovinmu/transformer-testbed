@@ -8,7 +8,7 @@
 }
 
 .description {
-  display: inherit;
+  display: block;
   justify-content: inherit;
   align-items: inherit;
   font-size: 0.85rem;
@@ -16,22 +16,49 @@
   width: 100%;
   z-index: 2;
   font-family: var(--font-mono);
-}
 
-.description a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.description p {
   position: relative;
-  margin: 0;
+  margin: 10px;
   padding: 1rem;
-  background-color: rgba(var(--callout-rgb), 0.5);
-  border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+
   border-radius: var(--border-radius);
+}
+
+/* what you type into */
+.chatbox {
+  display: block;
+  font-size: 0.85rem;
+  max-width: var(--max-width);
+  width: 100%;
+}
+
+/* an individual chat message */
+.chatcontainer {
+  border: 1px solid rgba(var(--callout-border-rgb), 0.3);
+  padding: 8px;
+  margin: 2px;
+}
+
+.chatlabel {
+  display: inline-flex;
+  height: 100%;
+  width: 40px;
+  font-size: 0.65rem;
+
+}
+
+.chattext {
+  display:inline-flex;
+}
+
+.robot {
+  margin: 5px;
+  background-color: rgb(52, 52, 52);
+}
+
+.human {
+  margin: 5px;
+  background-color: black;
 }
 
 .code {
@@ -81,7 +108,6 @@
 }
 
 .center::before {
-  background: var(--secondary-glow);
   border-radius: 50%;
   width: 480px;
   height: 360px;
@@ -89,7 +115,6 @@
 }
 
 .center::after {
-  background: var(--primary-glow);
   width: 240px;
   height: 180px;
   z-index: -1;
