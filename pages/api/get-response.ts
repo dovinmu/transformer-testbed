@@ -6,8 +6,6 @@ type Data = {
     response: string
 }
 
-
-
 const addConversation = (promptPrefix: string, conversation: Array<string>, modelName: string, humanName: string) => {
     let conversationStr = ''
     for(let i=0; i < conversation.length; i+=2) {
@@ -27,9 +25,9 @@ const cleanResponse = (response: string, modelName: string, humanName: string) =
     response = response.trim();
     if(response.indexOf(humanName) == 0) {
         // the robot has chosen to play act as the human first, so its answer won't make sense if we just extract that... 
-        // bit of a failure state here 🤷‍♂️
+        // bit of a failure state here since it's responding as the human but 🤷‍♂️
         response = response.replace(humanName, '')
-        if(response.indexOf(modelName)) {
+        if(response.indexOf(modelName) > -1) {
             return response.split(humanName)[0];
         }
     }
@@ -60,16 +58,27 @@ const lookupModel = (selectedModel: string) => {
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Data>
+    res: NextApiResponse<Data | { error: any}>
   ) {
     const humanName = "Human A"
     const selectedModel = lookupModel(req.body.currentModel);
-    const {promptPrefix, modelName} = generatePrompt(humanName, req.body.currentMood);
-    const fullPrompt = addConversation(promptPrefix, req.body.conversation, modelName, humanName);
-    let chatResponse = await query(fullPrompt, selectedModel);
-    console.log("beginning of prompt:", fullPrompt.slice(0,200), "...")
+    let fullPrompt, modelNameOverscope; // kind of a weird scoping problem I admit, should refactor this
+    try {
+        const {promptPrefix, modelName} = generatePrompt(humanName, req.body.currentMood);
+        modelNameOverscope = modelName;
+        fullPrompt = addConversation(promptPrefix, req.body.conversation, modelName, humanName);
+    } catch(err) {
+        return res.status(500).json({ error: err})
+    }
+    let chatResponse;
+    try{
+        chatResponse = await query(fullPrompt, selectedModel);
+    } catch(err) {
+        return res.status(500).json({ error: err })
+    }
+    console.log("beginning of prompt:", fullPrompt.slice(0,1000), "...")
     console.log("full response:", chatResponse);
-    chatResponse = cleanResponse(chatResponse, modelName, humanName)
+    chatResponse = cleanResponse(chatResponse, modelNameOverscope, humanName)
     console.log("cleaned response:", chatResponse);
-    res.status(200).json({ response: chatResponse })
+    return res.status(200).json({ response: chatResponse })
   }
