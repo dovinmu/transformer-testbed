@@ -57,7 +57,7 @@ export default function Home() {
   }
 
   const fixNewlines = (s: string) => {
-    return s.split('\n').map(ss => <p className={styles.chatparagraph}>{ss}</p>)
+    return s.split('\n').map((ss,i) => <p key={'p'+i} className={styles.chatparagraph}>{ss}</p>)
   }
 
   return (
