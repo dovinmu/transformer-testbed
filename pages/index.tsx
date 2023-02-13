@@ -61,10 +61,10 @@ export default function Home() {
             <div className={[i % 2 == 0 ? styles.human: styles.robot, styles.chatcontainer].join(" ")} key={i}>
               {i%2==0? <>
                 {/* <Image src="public/human.png" alt="human" width={100} height={100}/>  */}
-                <p className={styles.chatlabel}>human</p>
+                <p className={styles.chatlabel}>👨‍💻</p>
               </> : <> 
                 {/* <Image  src="public/robot.png" alt="robot" width={100} height={100}/> */}
-                <p className={styles.chatlabel}>robot</p>
+                <p className={styles.chatlabel}>🤖</p>
               </>}
               <p className={styles.chattext}>{item}</p>
             </div>
