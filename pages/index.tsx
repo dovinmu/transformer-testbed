@@ -203,7 +203,7 @@ const ChatBox = ({ addToList, disabled, setDisabled }: {addToList: any, disabled
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.description}>
+    <form onSubmit={handleSubmit}>
       <fieldset>
         <textarea value={message} onChange={handleChange} onKeyDown={handleKeyDown}/>
         {/* <button type="submit" disabled={disabled}>Send</button> */}
