@@ -1,6 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a testbed for experimenting with searching and synthesizing data, using different combinations of the following:
+- foundation models / large language models, like OpenAI's GPT models and a number of other domain-specific models
+- datasets for searching over and feeding select results to the model
+- search algorithms, methods for deciding what to pick from the dataset
+- natural language prompts, to describe to the models what they're doing
 
 ## Getting Started
+
+This is based on the NextJS project template, and I haven't changed that much of the functionality.
 
 First, run the development server:
 
