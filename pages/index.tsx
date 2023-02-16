@@ -31,10 +31,9 @@ export default function Home() {
       case HuggingFaceModel.biogpt:
         return ["q-and-a"]
       default:
-        return ["none", "chat", "bing-normal", "very-safe"]
+        return ["none", "chat", "bing-normal", "bing-stoned", "very-safe"]
     }
   }
-
 
   const getPromptName = (prompt: string) => {
     switch(prompt) {
