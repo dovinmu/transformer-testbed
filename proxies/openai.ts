@@ -11,36 +11,23 @@ type APIError = {
     error: { message: string, type: string }
 }
 
-enum OpenAIModel {
-    ada, babbage, curie, davinci
+const OpenAIModel = {
+    ada: 'text-ada-001', 
+    babbage: 'text-babbage-001', 
+    curie: 'text-curie-001', 
+    davinci: 'text-davinci-003',
+    davinci_instruct: 'TODO'
 }
-
-
 
 const MAX_TOKENS = 500;
 const TEMP = 1.0;
 
-const getOpenAIModel = (model: OpenAIModel):string => {
-    switch(model) {
-        case OpenAIModel.ada:
-            return 'text-ada-001';
-        case OpenAIModel.babbage:
-            return 'text-babbage-001';
-        case OpenAIModel.curie:
-            return 'text-curie-001';
-        case OpenAIModel.davinci:
-            return 'text-davinci-003';
-        default:
-            return 'text-ada-001';
-    }
-}
 
-async function query(prompt: string, model: OpenAIModel) {
+async function query(prompt: string, modelId: string) {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
     }
-    const modelId = getOpenAIModel(model);
     console.log(`querying ${modelId}`)
     const data = {"model": modelId, "prompt": prompt, "temperature": TEMP, "max_tokens": MAX_TOKENS};
     const response = await fetch('https://api.openai.com/v1/completions', {

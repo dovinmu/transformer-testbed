@@ -1,4 +1,4 @@
-export const generatePrompt = (humanName: string, mood="normal", context: string='', location: string="Redmond, Washington, United States") => {
+export const generatePrompt = (promptId="normal", context: string='', location: string="Redmond, Washington, United States") => {
     /**
     prepares all context for a Bing-like prompt, except for the actual conversation.
     placeholders in context:
@@ -10,35 +10,43 @@ export const generatePrompt = (humanName: string, mood="normal", context: string
     * Conversation of Human A with Sydney given the context
     __CONVERSATION__
     */
-    let modelName = "Sydney";
+    let humanName = "question";
+    let modelName = "answer";
     let prompt = ''
-    switch(mood) {
+    switch(promptId) {
         case 'chat':
             prompt = CHAT_PROMPT;
             modelName = "ChatGPT";
+            humanName = "Human A";
             break;
         case 'bing-normal':
             prompt = BING_NORMAL;
+            modelName = "Sydney";
+            humanName = "Human A";
             break;
         case 'bing-stoned':
             prompt = BING_STONED;
+            modelName = "Sydney";
+            humanName = "Human A";
             break;
         case 'bing-cyberpunk':
             prompt = BING_CYBERPUNK;
+            modelName = "Sydney";
+            humanName = "Human A";
             break;
         case 'very-safe':
             prompt = ANTI_DAN;
             modelName = "Very Safe AI"
+            humanName = "Human A";
             break;
         case 'none':
+        case 'q-and-a':
             prompt = '__CONVERSATION__';
             break;
-        case 'bing-tripping':
-            throw Error(`mood ${mood} not recognized`)
         default:
-            throw Error(`mood ${mood} not recognized`)
+            throw Error(`prompt ID ${promptId} not recognized`)
     }
-    console.log(`mood: ${mood}`)
+    console.log(`mood: ${promptId}`)
 
     let promptPrefix = prompt.replace('__CONTEXT__', context)
     promptPrefix = promptPrefix.replace('__DATE_TIME__', 'Sun, 12 Feb 2023 12:40:49 EST') // todo
@@ -46,7 +54,7 @@ export const generatePrompt = (humanName: string, mood="normal", context: string
     promptPrefix = promptPrefix.replaceAll('__MODEL_NAME__', modelName)
     promptPrefix = promptPrefix.replaceAll('__HUMAN_NAME__', humanName)
 
-    return {promptPrefix, modelName}
+    return {promptPrefix, modelName, humanName}
 };
 
 const CHAT_PROMPT = `
