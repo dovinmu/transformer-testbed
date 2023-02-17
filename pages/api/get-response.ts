@@ -78,25 +78,30 @@ export default async function handler(
     res: NextApiResponse<Data | { error: any}>
   ) {
     console.log("==========")
-    const selectedModel = req.body.currentModel;
+    const { currentModel, conversation, currentPrompt } = req.body;
+    console.log({currentModel, currentPrompt, conversation});
     let fullPrompt, modelNameOverscope, humanNameOverscope; // kind of a weird scoping problem I admit, should refactor this
     try {
-        const {promptPrefix, modelName, humanName} = generatePrompt(req.body.currentPrompt);
+        const {promptPrefix, modelName, humanName} = generatePrompt(currentPrompt);
         modelNameOverscope = modelName;
         humanNameOverscope = humanName;
-        fullPrompt = addConversation(promptPrefix, req.body.conversation, modelName, humanName);
+        if(req.body.currentPrompt === 'none') {
+            fullPrompt = conversation[conversation.length-1];
+        } else {
+            fullPrompt = addConversation(promptPrefix, conversation, modelName, humanName);
+        }
     } catch(err) {
         console.log(err);
         return res.status(500).json({ error: err })
     }
     let chatResponse;
     try{
-        chatResponse = await query(fullPrompt, selectedModel);
+        chatResponse = await query(fullPrompt, currentModel);
     } catch(err) {
         console.log(err);
         return res.status(500).json({ error: err })
     }
-    console.log(selectedModel);
+    console.log(currentModel);
     console.log("beginning of prompt:", fullPrompt.slice(0,100), "...")
     console.log("full response:", chatResponse);
 

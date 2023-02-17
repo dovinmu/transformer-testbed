@@ -1,4 +1,4 @@
-export const generatePrompt = (promptId="normal", context: string='', location: string="Redmond, Washington, United States") => {
+export const generatePrompt = (promptId="chat", context: string='', location: string="Redmond, Washington, United States") => {
     /**
     prepares all context for a Bing-like prompt, except for the actual conversation.
     placeholders in context:
