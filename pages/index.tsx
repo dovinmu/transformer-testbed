@@ -9,7 +9,7 @@ export default function Home() {
   const [chatboxDisabled, setChatboxDisabled] = useState<boolean>(false);
   const [response, setResponse] = useState<string>('');
   const [query, setQuery] = useState<string>('');
-  const [currentModel, setCurrentModel] = useState<string>(OpenAIModel.curie)
+  const [currentModel, setCurrentModel] = useState<string>(OpenAIModel.gpt35)
   const [currentPrompt, setCurrentPrompt] = useState<string>('none')
   const [currentData, setCurrentData] = useState<string>('none')
   const [currentHumanEmoji, setCurrentHumanEmoji] = useState<string>('👨‍💻')
@@ -20,6 +20,8 @@ export default function Home() {
       OpenAIModel.ada,
       OpenAIModel.curie,
       OpenAIModel.davinci,
+      OpenAIModel.gpt35,
+      OpenAIModel.gpt4,
       HuggingFaceModel.biogpt,
       HuggingFaceModel.gpt2,
       HuggingFaceModel.bigscience_bloom
@@ -31,7 +33,7 @@ export default function Home() {
       case HuggingFaceModel.biogpt:
         return ["q-and-a"]
       default:
-        return ["none", "chat", "bing-normal", "bing-stoned", "very-safe"]
+        return ["none", "corpo-finder", "bing-stoned", "very-safe"]
     }
   }
 
@@ -41,8 +43,8 @@ export default function Home() {
         return "Bing";
       case "bing-stoned":
         return "Bing (stoned)";
-      case "bing-cyberpunk":
-        return "Bing (cyberpunk)";
+      case "corpo-finder":
+        return "CorpoFinder™";
       case "very-safe":
         return "Very Safe Mode";
       case "q-and-a":

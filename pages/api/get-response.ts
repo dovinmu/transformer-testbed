@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {generatePrompt} from 'prompts';
-import { query as queryOpenAI, OpenAIModel } from '@/proxies/openai';
+import { query as queryOpenAI, OpenAIModel, isChatModel, queryChat } from '@/proxies/openai';
 import { query as queryHuggingFace, HuggingFaceModel } from '@/proxies/huggingface';
 
 type Data = {
@@ -65,13 +65,17 @@ const cleanResponse = (response: string, modelName: string, humanName: string) =
     return response
 }
 
-const query = (fullPrompt: string, selectedModel: string) => {
-    if(Object.values(OpenAIModel).includes(selectedModel)) {
+const query = (fullPrompt: string, selectedModel: string, prefixPrompt: string, conversation: Array<string>) => {
+    if(isChatModel(selectedModel)) {
+        prefixPrompt = prefixPrompt.replace('__CONVERSATION__', '');
+        return queryChat(conversation, prefixPrompt, selectedModel, MAX_TOKENS);
+    } else if(Object.values(OpenAIModel).includes(selectedModel)) {
         return queryOpenAI(fullPrompt, selectedModel, MAX_TOKENS);
     } else if(Object.values(HuggingFaceModel).includes(selectedModel)) {
         return queryHuggingFace(fullPrompt, selectedModel);
     }
 }
+
 
 export default async function handler(
     req: NextApiRequest,
@@ -80,15 +84,18 @@ export default async function handler(
     console.log("==========")
     const { currentModel, conversation, currentPrompt } = req.body;
     console.log({currentModel, currentPrompt, conversation});
-    let fullPrompt, modelNameOverscope, humanNameOverscope; // kind of a weird scoping problem I admit, should refactor this
+  
+    // we have to concatenate it all into a big string
+    let fullPrompt, prefixPrompt, modelName, humanName;
     try {
-        const {promptPrefix, modelName, humanName} = generatePrompt(currentPrompt);
-        modelNameOverscope = modelName;
-        humanNameOverscope = humanName;
+        const generated = generatePrompt(currentPrompt);
+        modelName = generated.modelName;
+        humanName = generated.humanName;
+        prefixPrompt = generated.promptPrefix;
         if(req.body.currentPrompt === 'none') {
             fullPrompt = conversation[conversation.length-1];
         } else {
-            fullPrompt = addConversation(promptPrefix, conversation, modelName, humanName);
+            fullPrompt = addConversation(prefixPrompt, conversation, modelName, humanName);
         }
     } catch(err) {
         console.log(err);
@@ -96,7 +103,7 @@ export default async function handler(
     }
     let chatResponse;
     try{
-        chatResponse = await query(fullPrompt, currentModel);
+        chatResponse = await query(fullPrompt, currentModel, prefixPrompt, conversation);
     } catch(err) {
         console.log(err);
         return res.status(500).json({ error: err })
@@ -108,7 +115,7 @@ export default async function handler(
     if(!chatResponse) {
         return res.status(200).json({ response: "<🤷‍♂️ no response...>"});
     }
-    chatResponse = cleanResponse(chatResponse, modelNameOverscope, humanNameOverscope);
+    chatResponse = cleanResponse(chatResponse, modelName, humanName);
     console.log("cleaned response:", chatResponse);
     return res.status(200).json({ response: chatResponse })
 }
