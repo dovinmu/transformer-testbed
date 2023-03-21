@@ -19,7 +19,6 @@ async function queryChat(conversation: Array<string>, system: string, modelId: s
     if(system !== '') {
         prompt.messages = [{ "role": "system", "content": system }].concat(prompt.messages);
     }
-    console.log({prompt});
     const data = {
         "model": modelId, ...prompt,
         "temperature": TEMP, 
