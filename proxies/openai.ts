@@ -20,7 +20,6 @@ async function queryChat(conversation: Array<string>, system: string, modelId: s
         prompt.messages = [{ "role": "system", "content": system }].concat(prompt.messages);
     }
     console.log({prompt});
-    console.log(prompt.messages)
     const data = {
         "model": modelId, ...prompt,
         "temperature": TEMP, 

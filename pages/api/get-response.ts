@@ -68,6 +68,7 @@ const cleanResponse = (response: string, modelName: string, humanName: string) =
 const query = (fullPrompt: string, selectedModel: string, prefixPrompt: string, conversation: Array<string>) => {
     if(isChatModel(selectedModel)) {
         prefixPrompt = prefixPrompt.replace('__CONVERSATION__', '');
+        console.log("beginning of system prompt:", prefixPrompt.slice(0, 100));
         return queryChat(conversation, prefixPrompt, selectedModel, MAX_TOKENS);
     } else if(Object.values(OpenAIModel).includes(selectedModel)) {
         return queryOpenAI(fullPrompt, selectedModel, MAX_TOKENS);

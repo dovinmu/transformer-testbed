@@ -33,7 +33,7 @@ export default function Home() {
       case HuggingFaceModel.biogpt:
         return ["q-and-a"]
       default:
-        return ["none", "corpo-finder", "bing-stoned", "very-safe"]
+        return ["none", "corpo-finder", "bing-stoned", "very-safe", "harmless-conspiracist"]
     }
   }
 
@@ -49,6 +49,8 @@ export default function Home() {
         return "Very Safe Mode";
       case "q-and-a":
         return "Q and A";
+      case "harmless-conspiracist":
+        return "Harmless conspiracist";
       default:
         return prompt;
     }
